@@ -22,25 +22,32 @@ const localgurdianValidationSchema = z.object({
   address: z.string(),
 });
 
-export const studentValidationSchema = z.object({
-  id: z.string(),
-  password: z.string(),
-  name: studentNameValidationSchema,
-  gender: z.enum(['male', 'female', 'others']),
-  dateOfBirth: z.string().optional(),
-  email: z.string().email('Email is not in the correct form'),
-  contactNo: z.string(),
-  emergencyContactNo: z.string(),
-  bloodGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-    .optional(),
-  presentAddress: z.string(),
-  permanentAddress: z.string(),
-  guardian: gurdianValidationSchema,
-  localGuardian: localgurdianValidationSchema,
-  profileImage: z.string().optional(),
+export const createStudentValidationSchema = z.object({
+  body: z.object({
+    // id: z.string(),
+    password: z.string(),
+    student: z.object({
+      name: studentNameValidationSchema,
+      gender: z.enum(['male', 'female', 'others']),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email('Email is not in the correct form'),
+      contactNo: z.string(),
+      emergencyContactNo: z.string(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string(),
+      permanentAddress: z.string(),
+      guardian: gurdianValidationSchema,
+      localGuardian: localgurdianValidationSchema,
+      profileImage: z.string().optional(),
+      admissionSemester: z.string(),
+    }),
 
-  isDeleted: z.boolean(),
+    // isDeleted: z.boolean(),
+  }),
 });
 
-export default studentValidationSchema;
+export const studentValidation = {
+  studentValidationSchema: createStudentValidationSchema,
+};
