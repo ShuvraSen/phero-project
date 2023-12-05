@@ -2,7 +2,20 @@ import { TAcademicSemester } from '../accademicSemester/accademicSemester.interf
 import { User } from './user.model';
 
 export const generatedStudentId = async (payload: TAcademicSemester) => {
-  const currentId = (await findLastStudentId()) || (0).toString();
+  let currentId = (0).toString();
+  const lastStudentId = await findLastStudentId();
+  const lastStudentSemesterCode = lastStudentId?.substring(4, 6);
+  const lastStudentSemesterYear = lastStudentId?.substring(0, 4);
+  const currentSemesCode = payload.code;
+  const currentSemesYear = payload.year;
+
+  if (
+    lastStudentId &&
+    lastStudentSemesterCode === currentSemesCode &&
+    lastStudentSemesterYear === currentSemesYear
+  ) {
+    currentId = lastStudentId.substring(6);
+  }
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
   incrementId = `${payload.year}${payload.code}${incrementId}`;
   return incrementId;
@@ -19,5 +32,5 @@ const findLastStudentId = async () => {
   )
     .sort({ createdAt: -1 })
     .lean();
-  return laststudent?.id ? laststudent.id.substring(6) : undefined;
+  return laststudent?.id ? laststudent.id : undefined;
 };
